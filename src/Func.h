@@ -1394,6 +1394,13 @@ public:
      */
     Func copy_to_host();
 
+    /** Quantize expr in func into 8-bit with scalar and zero-point. 
+     * 
+     */
+    Func &quant8(Expr scale, Expr zp);
+    Func &dequant8(Expr scale, Expr zp);
+    Func &q8mat(Expr scale, Expr zp);
+
     /** Split a dimension into inner and outer subdimensions with the
      * given names, where the inner dimension iterates from 0 to
      * factor-1. The inner and outer subdimensions can then be dealt

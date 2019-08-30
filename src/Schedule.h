@@ -301,6 +301,18 @@ struct Dim {
     }
 };
 
+struct Quant8 {
+    Expr scale, zp;
+};
+
+struct Dequant8 {
+    Expr scale, zp;
+};
+
+struct Q8mat {
+    Expr scale, zp;
+};
+
 struct Bound {
     std::string var;
     Expr min, extent, modulus, remainder;
@@ -412,6 +424,15 @@ public:
     MemoryType memory_type() const;
     MemoryType &memory_type();
     // @}
+
+    const std::vector<Quant8> &quants() const;
+    std::vector<Quant8> &quants();
+
+    const std::vector<Dequant8> &dequants() const;
+    std::vector<Dequant8> &dequants();
+
+    const std::vector<Q8mat> &q8mats() const;
+    std::vector<Q8mat> &q8mats();
 
     /** You may explicitly bound some of the dimensions of a function,
      * or constrain them to lie on multiples of a given factor. See

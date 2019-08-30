@@ -1956,6 +1956,30 @@ Func Func::copy_to_host() {
     return copy_to_device(DeviceAPI::Host);
 }
 
+Func &Func::quant8(Expr scale, Expr zp) {
+
+    Quant8 q = {scale, zp};
+    func.schedule().quants().push_back(q);
+
+    return *this;
+}
+
+Func &Func::dequant8(Expr scale, Expr zp) {
+
+    Dequant8 dq = {scale, zp};
+    func.schedule().dequants().push_back(dq);
+
+    return *this;
+}
+
+Func &Func::q8mat(Expr scale, Expr zp) {
+
+    Q8mat qm = {scale, zp};
+    func.schedule().q8mats().push_back(qm);
+
+    return *this;
+}
+
 Func &Func::split(VarOrRVar old, VarOrRVar outer, VarOrRVar inner, Expr factor, TailStrategy tail) {
     invalidate_cache();
     Stage(func, func.definition(), 0).split(old, outer, inner, factor, tail);

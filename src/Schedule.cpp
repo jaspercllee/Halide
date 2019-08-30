@@ -209,6 +209,9 @@ struct FuncScheduleContents {
 
     LoopLevel store_level, compute_level;
     std::vector<StorageDim> storage_dims;
+    std::vector<Quant8> quants;
+    std::vector<Dequant8> dequants;
+    std::vector<Q8mat> q8mats;
     std::vector<Bound> bounds;
     std::vector<Bound> estimates;
     std::map<std::string, Internal::FunctionPtr> wrappers;
@@ -247,6 +250,30 @@ struct FuncScheduleContents {
             }
             if (b.remainder.defined()) {
                 b.remainder = mutator->mutate(b.remainder);
+            }
+        }
+        for (Quant8 &q : quants) {
+            if (q.scale.defined()) {
+                q.scale = mutator->mutate(q.scale);
+            }
+            if (q.zp.defined()) {
+                q.zp = mutator->mutate(q.zp);
+            }
+        }
+        for (Dequant8 &dq : dequants) {
+            if (dq.scale.defined()) {
+                dq.scale = mutator->mutate(dq.scale);
+            }
+            if (dq.zp.defined()) {
+                dq.zp = mutator->mutate(dq.zp);
+            }
+        }
+        for (Q8mat &qm : q8mats) {
+            if (qm.scale.defined()) {
+                qm.scale = mutator->mutate(qm.scale);
+            }
+            if (qm.zp.defined()) {
+                qm.zp = mutator->mutate(qm.zp);
             }
         }
     }
@@ -324,6 +351,9 @@ FuncSchedule FuncSchedule::deep_copy(
     copy.contents->store_level = contents->store_level;
     copy.contents->compute_level = contents->compute_level;
     copy.contents->storage_dims = contents->storage_dims;
+    copy.contents->quants = contents->quants;
+    copy.contents->dequants = contents->dequants;
+    copy.contents->q8mats = contents->q8mats;
     copy.contents->bounds = contents->bounds;
     copy.contents->estimates = contents->estimates;
     copy.contents->memory_type = contents->memory_type;
@@ -370,6 +400,30 @@ std::vector<StorageDim> &FuncSchedule::storage_dims() {
 
 const std::vector<StorageDim> &FuncSchedule::storage_dims() const {
     return contents->storage_dims;
+}
+
+std::vector<Quant8> &FuncSchedule::quants() {
+    return contents->quants;
+}
+
+const std::vector<Quant8> &FuncSchedule::quants() const {
+    return contents->quants;
+}
+
+std::vector<Dequant8> &FuncSchedule::dequants() {
+    return contents->dequants;
+}
+
+const std::vector<Dequant8> &FuncSchedule::dequants() const {
+    return contents->dequants;
+}
+
+std::vector<Q8mat> &FuncSchedule::q8mats() {
+    return contents->q8mats;
+}
+
+const std::vector<Q8mat> &FuncSchedule::q8mats() const {
+    return contents->q8mats;
 }
 
 std::vector<Bound> &FuncSchedule::bounds() {
@@ -426,6 +480,30 @@ const LoopLevel &FuncSchedule::compute_level() const {
 }
 
 void FuncSchedule::accept(IRVisitor *visitor) const {
+    for (const Quant8 &q : quants()) {
+        if (q.scale.defined()) {
+            q.scale.accept(visitor);
+        }
+        if (q.zp.defined()) {
+            q.zp.accept(visitor);
+        }
+    }
+    for (const Dequant8 &dq : dequants()) {
+        if (dq.scale.defined()) {
+            dq.scale.accept(visitor);
+        }
+        if (dq.zp.defined()) {
+            dq.zp.accept(visitor);
+        }
+    }
+    for (const Q8mat &qm : q8mats()) {
+        if (qm.scale.defined()) {
+            qm.scale.accept(visitor);
+        }
+        if (qm.zp.defined()) {
+            qm.zp.accept(visitor);
+        }
+    }
     for (const Bound &b : bounds()) {
         if (b.min.defined()) {
             b.min.accept(visitor);
