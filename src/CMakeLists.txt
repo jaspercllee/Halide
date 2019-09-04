@@ -441,6 +441,7 @@ set(HEADER_FILES
   WasmExecutor.h
   WrapCalls.h
   WrapExternStages.h
+  Quant.h
 )
 
 file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/include")
@@ -626,6 +627,7 @@ add_library(Halide ${HALIDE_LIBRARY_TYPE}
   WasmExecutor.cpp
   WrapCalls.cpp
   WrapExternStages.cpp
+  Quant.cpp
   ${HEADER_FILES}
   ${INITIAL_MODULES}
 )

@@ -253,6 +253,7 @@ struct FuncScheduleContents {
             }
         }
         for (Quant8 &q : quants) {
+            debug(3) << "In quant schedule:264 " << " = " << q.scale << "\n";
             if (q.scale.defined()) {
                 q.scale = mutator->mutate(q.scale);
             }
@@ -261,6 +262,7 @@ struct FuncScheduleContents {
             }
         }
         for (Dequant8 &dq : dequants) {
+            debug(3) << "In dequant schedule:264 " << " = " << dq.scale << "\n";
             if (dq.scale.defined()) {
                 dq.scale = mutator->mutate(dq.scale);
             }
@@ -269,6 +271,7 @@ struct FuncScheduleContents {
             }
         }
         for (Q8mat &qm : q8mats) {
+            debug(3) << "In q8mat schedule:273 " << "\n";
             if (qm.scale.defined()) {
                 qm.scale = mutator->mutate(qm.scale);
             }
@@ -351,14 +354,14 @@ FuncSchedule FuncSchedule::deep_copy(
     copy.contents->store_level = contents->store_level;
     copy.contents->compute_level = contents->compute_level;
     copy.contents->storage_dims = contents->storage_dims;
-    copy.contents->quants = contents->quants;
-    copy.contents->dequants = contents->dequants;
-    copy.contents->q8mats = contents->q8mats;
     copy.contents->bounds = contents->bounds;
     copy.contents->estimates = contents->estimates;
     copy.contents->memory_type = contents->memory_type;
     copy.contents->memoized = contents->memoized;
     copy.contents->async = contents->async;
+    copy.contents->quants = contents->quants;
+    copy.contents->dequants = contents->dequants;
+    copy.contents->q8mats = contents->q8mats;
 
     // Deep-copy wrapper functions.
     for (const auto &iter : contents->wrappers) {
@@ -411,18 +414,22 @@ const std::vector<Quant8> &FuncSchedule::quants() const {
 }
 
 std::vector<Dequant8> &FuncSchedule::dequants() {
+    debug(3) << "In dequant schedule:431 " << "\n";
     return contents->dequants;
 }
 
 const std::vector<Dequant8> &FuncSchedule::dequants() const {
+    debug(3) << "In dequant schedule:436 " << "\n";
     return contents->dequants;
 }
 
 std::vector<Q8mat> &FuncSchedule::q8mats() {
+    debug(3) << "In q8mat schedule:440 " << "\n";
     return contents->q8mats;
 }
 
 const std::vector<Q8mat> &FuncSchedule::q8mats() const {
+    debug(3) << "In q8mat schedule:446 " << "\n";
     return contents->q8mats;
 }
 
@@ -489,14 +496,17 @@ void FuncSchedule::accept(IRVisitor *visitor) const {
         }
     }
     for (const Dequant8 &dq : dequants()) {
+        debug(3) << "In dequant schedule:523 " << "\n";
         if (dq.scale.defined()) {
             dq.scale.accept(visitor);
         }
         if (dq.zp.defined()) {
+            debug(3) << "In dequant schedule:528 " << "\n";
             dq.zp.accept(visitor);
         }
     }
     for (const Q8mat &qm : q8mats()) {
+        debug(3) << "In q8mat schedule:535 " << "\n";
         if (qm.scale.defined()) {
             qm.scale.accept(visitor);
         }

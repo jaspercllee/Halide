@@ -1,4 +1,4 @@
-#include "Quant8.h"
+#include "Quant.h"
 #include "IRMutator.h"
 #include "IROperator.h"
 
@@ -107,20 +107,20 @@ public:
 
 
 Expr q8mat(Expr scale, Expr zp, Expr value) {
-    debug(3) << "in quant_mat" << " = " << value << "\n";
+    debug(3) << "q8mat@Quant.cpp" << " = " << value << "\n";
 
 
 //    zp = saturating_cast(UInt(8), zp);
 
 
     if(scale.defined()) {
-        debug(3) << "in quant_mat" << " = " << value << "\n";
+        debug(3) << "q8mat@Quant.cpp" << " = " << value << "\n";
     }
 
 
-    debug(3) << "in quant_mat" << " = " << value << "\n";
+    debug(3) << "q8mat@Quant.cpp" << " = " << value << "\n";
     QuantMatExpr q(scale, zp);
-    debug(3) << "in quant_mat" << " = " << value << "\n";
+    debug(3) << "q8mat@Quant.cpp" << " = " << value << "\n";
     return q.mutate(value);
 }
 

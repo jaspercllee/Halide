@@ -19,6 +19,7 @@
 #include "Target.h"
 #include "Var.h"
 #include "Prefetch.h"
+#include "Quant.h"
 
 namespace Halide {
 namespace Internal {
@@ -328,11 +329,51 @@ Stmt build_provide_loop_nest(const map<string, Function> &env,
 
     internal_assert(!is_update == def.is_init());
 
+    // for (de)quantize
+    Expr scale, zp;
+    string tgt;
+    int flag = 0;
+    const FuncSchedule &s = func.schedule();
+    for (auto q : s.quants()) {
+        tgt = func.name();
+        scale = q.scale;
+        zp = q.zp;
+        flag = 1;
+    }
+    for (auto dq : s.dequants()) {
+        tgt = func.name();
+        scale = dq.scale;
+        zp = dq.zp;
+        flag = 2;
+    }
+    for (auto qm : s.q8mats()) {
+        tgt = func.name();
+        scale = qm.scale;
+        zp = qm.zp;
+        flag = 3;
+//        debug(3) << "....mat Scale: " << ":" << scale << "\n";
+    }
+
     // Default stored values
     vector<Expr> site(def.args().size());
     vector<Expr> values(def.values().size());
     for (size_t i = 0; i < values.size(); i++) {
         Expr v = def.values()[i];
+        debug(3) << "Initial Value:337 " << i << " = " << v << "\n";
+        if(flag == 1) {
+            v = quant(scale, zp, v);
+            flag = 0;
+        }
+        if(flag == 2) {
+            v = dequant(scale, zp, v);
+            flag = 0;
+        }
+        if(flag == 3) {
+            // Todo: convert different factor to same factor
+            v = q8mat(scale, zp, v);
+            flag = 0;
+        }
+
         v = qualify(prefix, v);
         values[i] = v;
         debug(3) << "Value " << i << " = " << v << "\n";

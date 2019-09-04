@@ -1957,26 +1957,28 @@ Func Func::copy_to_host() {
 }
 
 Func &Func::quant8(Expr scale, Expr zp) {
-
+    invalidate_cache();
     Quant8 q = {scale, zp};
     func.schedule().quants().push_back(q);
-
+    debug(3) << "In func quant " << ":" << func.name() << "\n";
     return *this;
 }
+
 
 Func &Func::dequant8(Expr scale, Expr zp) {
-
+    invalidate_cache();
     Dequant8 dq = {scale, zp};
     func.schedule().dequants().push_back(dq);
-
+    debug(3) << "In func dequant " << ":" << func.name() << "\n";
     return *this;
 }
 
-Func &Func::q8mat(Expr scale, Expr zp) {
 
+Func &Func::q8mat(Expr scale, Expr zp) {
+    invalidate_cache();
     Q8mat qm = {scale, zp};
     func.schedule().q8mats().push_back(qm);
-
+    debug(3) << "In func quant mat " << ":" << func.name() << "\n";
     return *this;
 }
 

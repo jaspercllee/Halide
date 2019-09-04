@@ -12,8 +12,8 @@ namespace Halide {
 namespace Internal {
 
 /** Quantize, Dequantize, and quantized-matrix multiplication. */
-Expr quant8(Expr scale, Expr zp, Expr value);
-Expr dequant8(Expr scale, Expr zp, Expr value);
+Expr quant(Expr scale, Expr zp, Expr value);
+Expr dequant(Expr scale, Expr zp, Expr value);
 Expr q8mat(Expr scale, Expr zp, Expr value);
 
 }  // namespace Internal
