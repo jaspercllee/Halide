@@ -13,7 +13,7 @@ namespace Internal {
 
 /** Quantize, Dequantize, and quantized-matrix multiplication. */
 Expr quant(Expr scale, Expr zp, Expr value);
-Expr dequant(Expr scale, Expr zp, Expr value);
+Expr dequant(Expr scale, Expr zp, Expr k, Expr value);
 Expr q8mat(Expr scale, Expr zp, Expr value);
 
 }  // namespace Internal

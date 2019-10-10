@@ -1398,7 +1398,7 @@ public:
      * 
      */
     Func &quant8(Expr scale, Expr zp);
-    Func &dequant8(Expr scale, Expr zp);
+    Func &dequant8(Expr scale, Expr zp, Expr k);
     Func &q8mat(Expr scale, Expr zp);
 
     /** Split a dimension into inner and outer subdimensions with the

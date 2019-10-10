@@ -306,7 +306,7 @@ struct Quant8 {
 };
 
 struct Dequant8 {
-    Expr scale, zp;
+    Expr scale, zp, k;
 };
 
 struct Q8mat {

@@ -330,7 +330,7 @@ Stmt build_provide_loop_nest(const map<string, Function> &env,
     internal_assert(!is_update == def.is_init());
 
     // for (de)quantize
-    Expr scale, zp;
+    Expr scale, zp, k;
     string tgt;
     int flag = 0;
     const FuncSchedule &s = func.schedule();
@@ -344,6 +344,7 @@ Stmt build_provide_loop_nest(const map<string, Function> &env,
         tgt = func.name();
         scale = dq.scale;
         zp = dq.zp;
+        k = dq.k;
         flag = 2;
     }
     for (auto qm : s.q8mats()) {
@@ -365,7 +366,7 @@ Stmt build_provide_loop_nest(const map<string, Function> &env,
             flag = 0;
         }
         if(flag == 2) {
-            v = dequant(scale, zp, v);
+            v = dequant(scale, zp, k, v);
             flag = 0;
         }
         if(flag == 3) {

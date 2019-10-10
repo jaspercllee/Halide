@@ -1965,9 +1965,9 @@ Func &Func::quant8(Expr scale, Expr zp) {
 }
 
 
-Func &Func::dequant8(Expr scale, Expr zp) {
+Func &Func::dequant8(Expr scale, Expr zp, Expr k) {
     invalidate_cache();
-    Dequant8 dq = {scale, zp};
+    Dequant8 dq = {scale, zp, k};
     func.schedule().dequants().push_back(dq);
     debug(3) << "In func dequant " << ":" << func.name() << "\n";
     return *this;

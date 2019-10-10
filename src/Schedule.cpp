@@ -269,6 +269,9 @@ struct FuncScheduleContents {
             if (dq.zp.defined()) {
                 dq.zp = mutator->mutate(dq.zp);
             }
+            if (dq.k.defined()) {
+                dq.k = mutator->mutate(dq.k);
+            }
         }
         for (Q8mat &qm : q8mats) {
             debug(3) << "In q8mat schedule:273 " << "\n";
@@ -503,6 +506,10 @@ void FuncSchedule::accept(IRVisitor *visitor) const {
         if (dq.zp.defined()) {
             debug(3) << "In dequant schedule:528 " << "\n";
             dq.zp.accept(visitor);
+        }
+        if (dq.k.defined()) {
+            debug(3) << "In dequant schedule:528 " << "\n";
+            dq.k.accept(visitor);
         }
     }
     for (const Q8mat &qm : q8mats()) {
